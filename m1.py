@@ -13,8 +13,7 @@ GROUP_ID = os.getenv('GROUP_ID')
 
 # vk_session = vk_api.VkApi(token=TOKEN)
 # long_poll = VkBotLongPoll(vk_session, GROUP_ID)
-#
-# # Вызов методов vk_api
+
 # session_api = vk_session.get_api()
 
 
