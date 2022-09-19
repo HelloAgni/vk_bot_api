@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+
+  db:
+    container_name: postgres_db_ct
+    image: postgres:latest
+    restart: always
+    volumes:
+      - db_value:/var/lib/postgresql/data/
+    env_file:
+      # - .env_d
+      - .env_d
+#    environment: or 123 file to load params
+#      POSTGRES_USER: user
+#      POSTGRES_PASSWORD: root
+#      POSTGRES_DB: test_db
+    ports:
+      - "49150:5432"
+
+  pgadmin:
+    container_name: pgadmin4_ct
+    image: dpage/pgadmin4
+    restart: always
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+#      PGADMIN_DEFAULT_PASSWORD: root
+    env_file:
+      # - .env_d
+      - .env_d
+    ports:
+      - "5050:80"
+
+volumes:
+  db_value:
+
+# connect PG admin -> http://localhost:5050
+# Add New server
+# Host -> host.docker.internal
+# Port -> 49150
+# USERNAME -> postgres
+# PASSWORD -> docker

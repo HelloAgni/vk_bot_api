@@ -1,15 +1,17 @@
 import os
 
 import vk_api
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 # import random
 from vk_api.utils import get_random_id
-
-load_dotenv()
+# from vk_bot.baking_bot.models import SimpleText
+load_dotenv(find_dotenv())
 
 TOKEN = os.getenv('ACCESS_TOKEN')
+print(TOKEN)
 GROUP_ID = os.getenv('GROUP_ID')
+print(GROUP_ID)
 
 # vk_session = vk_api.VkApi(token=TOKEN)
 # long_poll = VkBotLongPoll(vk_session, GROUP_ID)
@@ -82,6 +84,9 @@ class Server:
                     message='Привет - Я бот, проверка связи!!!')
             else:
                 print('Else type ->', event.type)
+                # new_commands = SimpleText.objects.get(id=1)
+                # print(new_commands)
+                # print(new_commands.text)
 
 
 if __name__ == '__main__':
