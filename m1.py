@@ -9,9 +9,7 @@ from vk_api.utils import get_random_id
 load_dotenv(find_dotenv())
 
 TOKEN = os.getenv('ACCESS_TOKEN')
-print(TOKEN)
 GROUP_ID = os.getenv('GROUP_ID')
-print(GROUP_ID)
 
 # vk_session = vk_api.VkApi(token=TOKEN)
 # long_poll = VkBotLongPoll(vk_session, GROUP_ID)
@@ -49,39 +47,41 @@ class Server:
             obj = event.obj
             print('Main_event ->', event)
             print('1 ->', obj)
-            # print('Else - 2 ->', vk_session.method('users.get', {'user_ids': obj.message.get("from_id")}))
-            if event.type == VkBotEventType.MESSAGE_NEW and obj.message.get(
-                    'text') == '/stop!':
+            user_name = self.vk_session.method(
+                'users.get', {'user_ids': obj.message.get(
+                    "from_id")})[0].get('first_name')
+            user_city = self.vk_session.method(
+                'users.get', {'user_ids': obj.message.get(
+                    "from_id"), 'fields': 'city'})[0].get('city').get('title')
+            if event.type == (
+                    VkBotEventType.MESSAGE_NEW and obj.message.get(
+                    'text') == '/stop!') or (
+                    VkBotEventType.MESSAGE_REPLY and obj.message.get(
+                    'text') == '/stop!'):
                 self.send_message(
-                    # session_api=self.session_api,
                     peer_id=obj.message.get('peer_id'),
                     message=f'Бот Вас покидает, выполнена команда - STOP'
                 )
                 return print('Бот остановлен!')
-            if event.type == VkBotEventType.MESSAGE_NEW:
-                user_name = self.vk_session.method(
-                    'users.get', {'user_ids': obj.message.get(
-                        "from_id")})[0].get('first_name')
-                user_city = self.vk_session.method(
-                    'users.get', {'user_ids': obj.message.get(
-                        "from_id"), 'fields': 'city'})[0].get('city').get('title')
-                print("В чате появилось новое сообщение!")
+            if event.type == VkBotEventType.MESSAGE_NEW:  # общий чат
                 self.send_message(
-                    # session_api=self.session_api,
                     peer_id=obj.message.get('peer_id'),
                     message=f'Привет - Я бот, проверка связи. Ваш ID >> '
                             f'{obj.message.get("from_id")}\n'
                             f'Ваше имя: {user_name}, '
                             f'город {user_city}'
                 )
-                # print('11->', self.get_user_name(obj.message.get("from_id")))
-                # print('22->', self.get_user_city(obj.message.get("from_id")))
-            if event.type == VkBotEventType.WALL_POST_NEW:
-                print('На стене появилась новая запись')
+            # if event.type == VkBotEventType.WALL_POST_NEW:
+            #     self.send_message(
+            #         # session_api=self.session_api,
+            #         peer_id=obj.from_id,
+            #         message='Привет - Я бот, проверка связи!!!')
+            if event.type == VkBotEventType.MESSAGE_REPLY:  # личный чат
                 self.send_message(
-                    # session_api=self.session_api,
                     peer_id=obj.from_id,
-                    message='Привет - Я бот, проверка связи!!!')
+                    message=(
+                        f'Привет - {user_name} город: {user_city}. Я Бот!')
+                )
             else:
                 print('Else type ->', event.type)
                 # new_commands = SimpleText.objects.get(id=1)
