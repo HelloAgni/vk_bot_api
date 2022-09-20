@@ -1,17 +1,36 @@
-# from django.conf import settings
-import os
+import csv
 
+from django.conf import settings
 from django.core.management.base import BaseCommand
-# from baking_bot.models import SimpleText
-from dotenv import load_dotenv
+from django.db import IntegrityError
 
-load_dotenv()
-x = os.getenv('GROUP_ID')
+from baking_bot.models import SimpleText, BakingType, Baking
+
+Models = {
+    SimpleText: 'commands.csv',
+    BakingType: 'bakingtype.csv',
+    Baking: 'baking.csv'
+}
 
 
 class Command(BaseCommand):
-    help = 'Тестирование данных'
+    help = 'Загрузка тестовых данных из csv файлов'
 
     def handle(self, *args, **options):
-        # return f'Info {SimpleText.objects.all()}'
-        return f'Info check  ID -> {x}'
+        for model, csv_files in Models.items():
+            with open(
+                f'{settings.BASE_DIR}/data_csv/{csv_files}',
+                'r',
+                encoding='utf-8'
+            ) as csv_file:
+                reader = csv.DictReader(csv_file)
+                try:
+                    model.objects.bulk_create(
+                        model(**items) for items in reader
+                    )
+                except IntegrityError:
+                    return 'Такие данные уже загружены в Базу'
+        return (f'Данные успешно загружены.\n'
+                f'Добавлены команды: '
+                f'{[_.get("title") for _ in SimpleText.objects.values()]}'
+                )

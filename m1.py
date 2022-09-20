@@ -3,7 +3,6 @@ import os
 import vk_api
 from dotenv import load_dotenv, find_dotenv
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
-# import random
 from vk_api.utils import get_random_id
 # from vk_bot.baking_bot.models import SimpleText
 load_dotenv(find_dotenv())
