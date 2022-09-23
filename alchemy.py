@@ -26,3 +26,14 @@ def photoz():
 
 # photo()
 # print(f'{MEDIA_ROOT}\\baking_bot\\images\\1.jpg')
+
+
+def xxx():
+    query_rows = db.execute(
+        "SELECT * FROM baking_bot_image").fetchall()
+    for register in query_rows:
+        print(register.image_file)
+        print(register.image_b64)
+
+
+xxx()

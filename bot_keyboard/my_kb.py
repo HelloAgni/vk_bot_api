@@ -13,34 +13,3 @@ def simple_keys():
     menu = menu.get_keyboard()
     return menu
 
-
-# def carousel_keys():
-#     carousel = {
-#         "type": "carousel",
-#         "elements": [{
-#             "photo_id": "215977715_457239022",
-#             "title": "Заголовок",
-#             "description": "Описание",
-#             "action": {
-#                 "type": "open_link",
-#                 "link": "https://dev.vk.com/guide"
-#             },
-#             "buttons": [
-#                     ["action": {
-#                         "type": "text",
-#                         "label": "Текст кнопки 🌚",
-#                         "payload": "{'a':123}"
-#                     }],
-#                     ["action": {
-#                         "type": "open_link",
-#                         "link": "ссылка",
-#                         "label": "Текст кнопки 🌚",
-#                         "payload": "{'b':777}"
-#                     }]
-#                 }
-#             ]
-#         }]
-#     }
-#     carousel = json.dumps(carousel, ensure_ascii=False).encode('utf-8')
-#     carousel = str(carousel.decode('utf-8'))
-#     return carousel

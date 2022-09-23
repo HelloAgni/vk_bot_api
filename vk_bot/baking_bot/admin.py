@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import SimpleText, Baking, BakingType
+from .models import SimpleText, Baking, BakingType, Image
 
 
 class SimpleTextAdmin(admin.ModelAdmin):
@@ -24,6 +24,11 @@ class BakingAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто'
 
 
+class ImageAdmin(admin.ModelAdmin):
+    list_display = ('image_file', 'image_b64')
+
+
 admin.site.register(Baking, BakingAdmin)
 admin.site.register(BakingType, BakingTypeAdmin)
 admin.site.register(SimpleText, SimpleTextAdmin)
+admin.site.register(Image, ImageAdmin)

@@ -14,12 +14,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = os.getenv('SECRET_KEY')  #, default='django-insecure-6@e@%01irz&qq3%1rygkvk@z7cm4nc43e2r_c+6f#%xf-_+u+8')
+SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-6@e@%01irz&qq3%1rygkvk@z7cm4nc43e2r_c+6f#%xf-_+u+8')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = False
 
 ALLOWED_HOSTS = ['*']
+
 
 
 # Application definition
@@ -75,11 +77,25 @@ WSGI_APPLICATION = 'vk_bot.wsgi.application'
 #     }
 # }
 
+DATABASES = {
+    'default': {
+        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': os.getenv('DB_NAME', default='postgres'),
+        'USER': os.getenv('POSTGRES_USER', default='postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
+        'HOST': os.getenv('DB_HOST', default='db'),
+        'PORT': os.getenv('DB_PORT', default='5432')
+    }
+}
+
 # DATABASES['default'] = dj_database_url.parse('postgres://postgres:docker@172.17.0.2:5432/test_base')
 # DATABASES['default'] = dj_database_url.parse('postgres://postgres:docker@localhost:49150/new_base')
-DATABASES = {
-    'default': dj_database_url.config(
-        default='postgres://postgres:docker@localhost:49150/new_base')}
+
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default='postgres://postgres:docker@localhost:49150/new_base')}
+
+
 # DATABASES['default'] = dj_database_url.parse('postgres://postgres:docker@localhost:49150/new_base')
 
 # Password validation

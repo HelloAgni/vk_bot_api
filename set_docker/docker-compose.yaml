@@ -5,7 +5,7 @@ services:
   db:
     container_name: postgres_db_ct
     image: postgres:latest
-    restart: always
+    # restart: always
     volumes:
       - db_value:/var/lib/postgresql/data/
     env_file:
@@ -21,7 +21,7 @@ services:
   pgadmin:
     container_name: pgadmin4_ct
     image: dpage/pgadmin4
-    restart: always
+    # restart: always
     volumes:
       - pgadmin_value:/var/lib/pgadmin
     env_file:
