@@ -1,6 +1,5 @@
 from django.db import models
 import base64
-from django.conf import settings
 
 
 class SimpleText(models.Model):
@@ -71,13 +70,13 @@ class Baking(models.Model):
 
 class Image(models.Model):
     image_file = models.ImageField(upload_to='img/')
-    image_b64 = models.TextField(blank=True)
+    # image_b64 = models.TextField(blank=True)
 
-    def save(self, *args, **kwargs):
-        if self.image_file:
-            # print(settings.MEDIA_URL + 'img/' + self.image_file.name)
-            super(Image, self).save(*args, **kwargs)
-            img_file = open(self.image_file.path, "rb")
-            self.image_b64 = base64.b64encode(img_file.read())
-            super(Image, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if self.image_file:
+    #         # print(settings.MEDIA_URL + 'img/' + self.image_file.name)
+    #         super(Image, self).save(*args, **kwargs)
+    #         img_file = open(self.image_file.path, "rb")
+    #         self.image_b64 = base64.b64encode(img_file.read())
+    #         super(Image, self).save(*args, **kwargs)
 

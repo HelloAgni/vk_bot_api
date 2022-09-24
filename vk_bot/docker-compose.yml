@@ -1,5 +1,7 @@
 version: '3.8'
+
 services:
+
   db:
     image: postgres:13.0-alpine
     # restart: always
@@ -7,14 +9,11 @@ services:
       - db_value:/var/lib/postgresql/data/
     env_file:
       - ../.env
+    ports:
+      - "5433:5432"  # для подключения Pgadmin 4
 
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-    # restart: always
+    build: .
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
@@ -23,7 +22,42 @@ services:
     env_file:
       - ../.env
 
+  nginx:
+    image: nginx:1.21.3-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+      - static_value:/var/html/static/
+      - media_value:/var/html/media/
+    depends_on:
+      - backend
+
+  pgadmin:
+    image: dpage/pgadmin4
+    volumes:
+      - pgadmin_value:/var/lib/pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "pgadmin4@pgadmin.org"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "5050:80"
+
 volumes:
   db_value:
   static_value:
   media_value:
+  pgadmin_value:
+
+
+# docker-compose up -d
+# connect PG admin -> http://localhost:5050
+# Login:
+# email -> pgadmin4@pgadmin.org
+# password -> admin
+# Add New server
+# General: # Name -> <Your_name>
+# Connection: # Host -> host.docker.internal
+# Port -> 5433
+# USERNAME -> postgres
+# PASSWORD -> postgres

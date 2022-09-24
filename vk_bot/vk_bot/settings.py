@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-import dj_database_url
+# import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -17,12 +17,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-6@e@%01irz&qq3%1rygkvk@z7cm4nc43e2r_c+6f#%xf-_+u+8')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = False
+# DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
-
-
 
 # Application definition
 

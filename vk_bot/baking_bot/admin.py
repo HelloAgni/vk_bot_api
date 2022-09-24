@@ -25,7 +25,7 @@ class BakingAdmin(admin.ModelAdmin):
 
 
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ('image_file', 'image_b64')
+    list_display = ('image_file', )
 
 
 admin.site.register(Baking, BakingAdmin)

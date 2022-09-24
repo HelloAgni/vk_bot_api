@@ -10,7 +10,6 @@ services:
       - db_value:/var/lib/postgresql/data/
     env_file:
        - .env.docker
-#      - ../.env
 #    environment: or .env file to load params
 #      POSTGRES_USER: user
 #      POSTGRES_PASSWORD: root
@@ -36,10 +35,11 @@ volumes:
 # docker-compose up -d
 # connect PG admin -> http://localhost:5050
 # Login:
-# email -> pgadmin4@pgadmin:
+# email -> pgadmin4@pgadmin.org
 # password -> admin
 # Add New server
-# Host -> host.docker.internal
+# General: # Name -> <Your_name>
+# Connection: # Host -> host.docker.internal
 # Port -> 49150
 # USERNAME -> postgres
 # PASSWORD -> docker

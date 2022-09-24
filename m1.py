@@ -6,7 +6,7 @@ from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.upload import VkUpload
 from vk_api.utils import get_random_id
 
-from alchemy import bot_commands, photoz
+from alchemy import bot_commands  #, photoz
 from bot_keyboard.my_kb import simple_keys  # carousel_keys
 
 load_dotenv()
@@ -43,7 +43,7 @@ class Server:
 
     def send_photo(self, peer_id):
         upload = VkUpload(self.vk_session)
-        photo = upload.photo_messages(photoz())
+        photo = upload.photo_messages()
         owner_id = photo[0]['owner_id']
         photo_id = photo[0]['id']
         access_key = photo[0]['access_key']
@@ -110,14 +110,14 @@ class Server:
             #             f'Привет - {user_name} город: {user_city}. Я Бот!\n'
             #             f'Доступные команды: {bot_commands()}')
             #     )
-            if (event.type == Server.NEW_MSG and obj.message.get(
-                    'text') == '/карусель!'):
-                self.send_message(
-                    peer_id=obj.message.get('peer_id'),
-                    message='Запускаем карусель!',
-                    keyboard=carousel_keys(),
-                    payload=[],
-                )
+            # if (event.type == Server.NEW_MSG and obj.message.get(
+            #         'text') == '/карусель!'):
+            #     self.send_message(
+            #         peer_id=obj.message.get('peer_id'),
+            #         message='Запускаем карусель!',
+            #         keyboard=carousel_keys(),
+            #         payload=[],
+            #     )
             if (event.type == Server.NEW_MSG and obj.message.get(
                     'text') == '/картинку!'):
                 self.send_photo(
