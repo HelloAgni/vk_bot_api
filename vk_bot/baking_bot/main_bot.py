@@ -5,20 +5,13 @@ from dotenv import load_dotenv
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.upload import VkUpload
 from vk_api.utils import get_random_id
-
-from alchemy import bot_commands  #, photoz
-from bot_keyboard.my_kb import simple_keys  # carousel_keys
+from alchemy_bot import bot_commands
+from keyboard_bot import simple_keys_start, baking_buttons, baking_type_list, baking_buttons_prod
 
 load_dotenv()
 
 TOKEN = os.getenv('FULL_ACCESS')
 GROUP_ID = os.getenv('GROUP_ID')
-
-
-# vk_session = vk_api.VkApi(token=TOKEN)
-# long_poll = VkBotLongPoll(vk_session, GROUP_ID)
-
-# vk = vk_session.get_api()
 
 
 class Server:
@@ -31,7 +24,7 @@ class Server:
         self.long_poll = VkBotLongPoll(self.vk_session, group_id=group_id)
         self.vk = self.vk_session.get_api()
 
-    def send_message(self, peer_id, keyboard, message=None,
+    def send_message(self, peer_id, keyboard=None, message=None,
                      attachment=None, payload=None):
         self.vk.messages.send(
             peer_id=peer_id, message=message,
@@ -57,40 +50,43 @@ class Server:
     def get_user_name(self, user_id):
         return self.vk.users.get(
             user_ids=user_id)[0].get('first_name')
+        # extract from event
+        # user_name = self.vk_session.method(
+        #     'users.get', {'user_ids': event.obj.message.get(
+        #         "from_id")})[0].get('first_name')
 
     def get_user_city(self, user_id):
         return self.vk.users.get(
             user_ids=user_id, fields="city")[0].get('city').get('title')
+        # extract from event
+        # user_city = self.vk_session.method(
+        #     'users.get', {'user_ids': event.obj.message.get(
+        #         "from_id"), 'fields': 'city'})[0].get('city').get('title')
 
     def start(self):
         for event in self.long_poll.listen():
-            obj = event.obj
             print('Main_event ->', event)
-            print('Main obj ->', obj)
-            if (event.type == Server.NEW_MSG and obj.message.get(
+            print('Main obj ->', event.obj)
+            if (event.type == Server.NEW_MSG and event.obj.message.get(
                     'text') == '/стоп!'):
                 self.send_message(
-                    peer_id=obj.message.get('peer_id'),
+                    peer_id=event.obj.message.get('peer_id'),
                     message=f'Бот Вас покидает, выполнена команда - STOP'
                 )
                 return print('Бот остановлен!')
-            if (event.type == Server.NEW_MSG and obj.message.get(
-                    'text') == '/Бот!'):  # общий чат
-                user_name = self.vk_session.method(
-                    'users.get', {'user_ids': obj.message.get(
-                        "from_id")})[0].get('first_name')
-                user_city = self.vk_session.method(
-                    'users.get', {'user_ids': obj.message.get(
-                        "from_id"), 'fields': 'city'})[0].get('city').get('title')
+            if (event.type == Server.NEW_MSG and event.obj.message.get(
+                    'text') == '/Бот!'):
+                message = event.obj.message
+                user_id = message.get('from_id')
+                peer_id = message.get('peer_id')
                 self.send_message(
-                    peer_id=obj.message.get('peer_id'),
+                    peer_id=peer_id,
                     message=(
                         f'Привет - Я Бот\n'
-                        # f'{obj.message.get("from_id")}\n'
-                        f'Ваше имя: {user_name}, '
-                        f'город {user_city}\n'
+                        f'Ваше имя {self.get_user_name(user_id=user_id)}, '
+                        f'Вы из города {self.get_user_city(user_id=user_id)}\n'
                         f'Доступные команды: {bot_commands()}'),
-                    keyboard=simple_keys(),
+                    keyboard=simple_keys_start(),
                 )
             # if event.type == VkBotEventType.WALL_POST_NEW:
             #     self.send_message(
@@ -110,18 +106,27 @@ class Server:
             #             f'Привет - {user_name} город: {user_city}. Я Бот!\n'
             #             f'Доступные команды: {bot_commands()}')
             #     )
-            # if (event.type == Server.NEW_MSG and obj.message.get(
-            #         'text') == '/карусель!'):
-            #     self.send_message(
-            #         peer_id=obj.message.get('peer_id'),
-            #         message='Запускаем карусель!',
-            #         keyboard=carousel_keys(),
-            #         payload=[],
-            #     )
-            if (event.type == Server.NEW_MSG and obj.message.get(
+            if (event.type == Server.NEW_MSG and event.message.get(
+                    'text') == 'Выпечки'):
+                self.send_message(
+                    peer_id=event.message.get('peer_id'),
+                    message='Выбирайте тип выпечки',
+                    keyboard=baking_buttons(),
+                    # payload=[],
+                )
+            if (event.type == Server.NEW_MSG and event.message.get(
+                    'text') in baking_type_list()):
+                text = event.message.get('text')
+                self.send_message(
+                    peer_id=event.message.get('peer_id'),
+                    message=f'Выбран тип: {text}',
+                    keyboard=baking_buttons_prod(text),
+                    payload=[],
+                )
+            if (event.type == Server.NEW_MSG and event.obj.message.get(
                     'text') == '/картинку!'):
                 self.send_photo(
-                    peer_id=obj.message.get("peer_id"))
+                    peer_id=event.obj.message.get("peer_id"))
             else:
                 print('Else type ->', event.type)
 

@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-# import dj_database_url
+import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -75,16 +75,16 @@ WSGI_APPLICATION = 'vk_bot.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
-        'NAME': os.getenv('DB_NAME', default='postgres'),
-        'USER': os.getenv('POSTGRES_USER', default='postgres'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
-        'HOST': os.getenv('DB_HOST', default='db'),
-        'PORT': os.getenv('DB_PORT', default='5432')
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
+#         'NAME': os.getenv('DB_NAME', default='postgres'),
+#         'USER': os.getenv('POSTGRES_USER', default='postgres'),
+#         'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
+#         'HOST': os.getenv('DB_HOST', default='db'),
+#         'PORT': os.getenv('DB_PORT', default='5432')
+#     }
+# }
 
 # DATABASES['default'] = dj_database_url.parse('postgres://postgres:docker@172.17.0.2:5432/test_base')
 # DATABASES['default'] = dj_database_url.parse('postgres://postgres:docker@localhost:49150/new_base')
@@ -92,7 +92,9 @@ DATABASES = {
 # DATABASES = {
 #     'default': dj_database_url.config(
 #         default='postgres://postgres:docker@localhost:49150/new_base')}
-
+DATABASES = {
+    'default': dj_database_url.config(
+        default='postgres://postgres:postgres@localhost:5433/postgres')}
 
 # DATABASES['default'] = dj_database_url.parse('postgres://postgres:docker@localhost:49150/new_base')
 
