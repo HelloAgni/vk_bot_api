@@ -1,11 +1,11 @@
 import os
-
+import json
 import vk_api
 from dotenv import load_dotenv
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.upload import VkUpload
 from vk_api.utils import get_random_id
-from alchemy_bot import bot_commands
+from alchemy_bot import bot_commands, photo_bot, full_info
 from keyboard_bot import simple_keys_start, baking_buttons, baking_type_list, baking_buttons_prod
 
 load_dotenv()
@@ -36,7 +36,7 @@ class Server:
 
     def send_photo(self, peer_id):
         upload = VkUpload(self.vk_session)
-        photo = upload.photo_messages()
+        photo = upload.photo_messages(photo_bot())
         owner_id = photo[0]['owner_id']
         photo_id = photo[0]['id']
         access_key = photo[0]['access_key']
@@ -66,7 +66,7 @@ class Server:
     def start(self):
         for event in self.long_poll.listen():
             print('Main_event ->', event)
-            print('Main obj ->', event.obj)
+            # print('Main obj ->', event.obj)
             if (event.type == Server.NEW_MSG and event.obj.message.get(
                     'text') == '/стоп!'):
                 self.send_message(
@@ -74,7 +74,7 @@ class Server:
                     message=f'Бот Вас покидает, выполнена команда - STOP'
                 )
                 return print('Бот остановлен!')
-            if (event.type == Server.NEW_MSG and event.obj.message.get(
+            elif (event.type == Server.NEW_MSG and event.obj.message.get(
                     'text') == '/Бот!'):
                 message = event.obj.message
                 user_id = message.get('from_id')
@@ -87,6 +87,12 @@ class Server:
                         f'Вы из города {self.get_user_city(user_id=user_id)}\n'
                         f'Доступные команды: {bot_commands()}'),
                     keyboard=simple_keys_start(),
+                )
+            elif event.type == Server.NEW_MSG and (json.loads(event.message.get(
+                        'payload')).get('bot_button') == 'Бот!'):
+                self.send_message(
+                    peer_id=event.message.get('peer_id'),
+                    message='Бот запущен, все в порядке'
                 )
             # if event.type == VkBotEventType.WALL_POST_NEW:
             #     self.send_message(
@@ -106,24 +112,46 @@ class Server:
             #             f'Привет - {user_name} город: {user_city}. Я Бот!\n'
             #             f'Доступные команды: {bot_commands()}')
             #     )
-            if (event.type == Server.NEW_MSG and event.message.get(
-                    'text') == 'Выпечки'):
+            # if (event.type == Server.NEW_MSG and event.message.get(
+            #         'text') == 'Выпечки' and event.obj.message.get('payload')):
+            elif event.type == Server.NEW_MSG and (json.loads(
+                    event.message.get(
+                        'payload')).get('button_baking') == 'Выпечки'):
                 self.send_message(
                     peer_id=event.message.get('peer_id'),
                     message='Выбирайте тип выпечки',
                     keyboard=baking_buttons(),
                     # payload=[],
                 )
-            if (event.type == Server.NEW_MSG and event.message.get(
-                    'text') in baking_type_list()):
-                text = event.message.get('text')
+            elif event.type == Server.NEW_MSG and (json.loads(
+                    event.message.get(
+                        'payload')).get('type')) in baking_type_list():
+                text = json.loads(
+                    event.message.get(
+                        'payload')).get('type')
                 self.send_message(
                     peer_id=event.message.get('peer_id'),
                     message=f'Выбран тип: {text}',
                     keyboard=baking_buttons_prod(text),
-                    payload=[],
+                    # payload=[],
                 )
-            if (event.type == Server.NEW_MSG and event.obj.message.get(
+            elif event.type == Server.NEW_MSG and json.loads(
+                    event.message.get(
+                        'payload')).get('title_button'):
+                prod = json.loads(
+                    event.message.get(
+                        'payload')).get('title_button')
+                items = full_info(prod=prod)
+                self.send_message(
+                    peer_id=event.message.get('peer_id'),
+                    message=f'Вы дошли до описания продукта...\n'
+                            f'Название: {items.get("title")}\n'
+                            f'Описание: {items.get("desc")}'
+                    # keyboard=baking_buttons_prod(text),
+                    # payload=[],
+                )
+                self.send_photo(peer_id=event.obj.message.get("peer_id"))
+            elif (event.type == Server.NEW_MSG and event.obj.message.get(
                     'text') == '/картинку!'):
                 self.send_photo(
                     peer_id=event.obj.message.get("peer_id"))
