@@ -2,5 +2,8 @@
 
 ***Learning:***   
 
-> Bot Long Poll API  
-> SQLAlchemy
+> VK Bot Long Poll API  
+> SQLAlchemy  
+> dj_database_url  
+> pgAdmin 4  
+
