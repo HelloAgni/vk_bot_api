@@ -14,3 +14,4 @@ SQLAlchemy==1.4.41
 sqlparse==0.4.2
 urllib3==1.26.12
 vk-api==11.9.9
+gunicorn==20.0.4

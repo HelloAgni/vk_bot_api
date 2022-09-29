@@ -3,11 +3,9 @@ from alchemy_bot import baking_type, baking_products_title
 
 
 def simple_keys_start():
-    # menu = VkKeyboard(inline=True)  # каждая кнопка отдельно
     menu = VkKeyboard()
     menu.add_button(
         'Бот!', payload={'bot_button': 'Бот!'})
-    # menu.add_button('Бот!', payload={'my_bot': True})
     menu.add_line()
     menu.add_button(
         'Выпечки', color='primary', payload={'button_baking': 'Выпечки'})

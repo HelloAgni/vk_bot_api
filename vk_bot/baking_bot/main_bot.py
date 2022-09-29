@@ -66,7 +66,6 @@ class Server:
     def start(self):
         for event in self.long_poll.listen():
             print('Main_event ->', event)
-            # print('Main obj ->', event.obj)
             if (event.type == Server.NEW_MSG and event.obj.message.get(
                     'text') == '/стоп!'):
                 self.send_message(
@@ -99,10 +98,6 @@ class Server:
             #         # session_api=self.session_api,
             #         peer_id=obj.from_id,
             #         message='Привет - Я бот, проверка связи!!!')
-            # if event.type == self.REPLY_MSG:
-            #     user_name = self.vk_session.method(
-            #         'users.get', {'user_ids': obj.get(
-            #             "from_id")})[0].get('first_name')
             #     user_city = self.vk_session.method(
             #         'users.get', {'user_ids': obj.get(
             #             "from_id"), 'fields': 'city'})[0].get('city').get('title')
@@ -112,8 +107,6 @@ class Server:
             #             f'Привет - {user_name} город: {user_city}. Я Бот!\n'
             #             f'Доступные команды: {bot_commands()}')
             #     )
-            # if (event.type == Server.NEW_MSG and event.message.get(
-            #         'text') == 'Выпечки' and event.obj.message.get('payload')):
             elif event.type == Server.NEW_MSG and (json.loads(
                     event.message.get(
                         'payload')).get('button_baking') == 'Выпечки'):
@@ -121,7 +114,6 @@ class Server:
                     peer_id=event.message.get('peer_id'),
                     message='Выбирайте тип выпечки',
                     keyboard=baking_buttons(),
-                    # payload=[],
                 )
             elif event.type == Server.NEW_MSG and (json.loads(
                     event.message.get(
@@ -133,7 +125,6 @@ class Server:
                     peer_id=event.message.get('peer_id'),
                     message=f'Выбран тип: {text}',
                     keyboard=baking_buttons_prod(text),
-                    # payload=[],
                 )
             elif event.type == Server.NEW_MSG and json.loads(
                     event.message.get(
