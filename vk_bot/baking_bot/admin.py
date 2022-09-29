@@ -4,7 +4,7 @@ from .models import SimpleText, Baking, BakingType
 
 
 class SimpleTextAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'text')
+    list_display = ('id', 'title', 'description')
     search_fields = ('title',)
     list_filter = ('title',)
     empty_value_display = '-пусто'

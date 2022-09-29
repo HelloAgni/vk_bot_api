@@ -2,9 +2,9 @@ from django.db import models
 
 
 class SimpleText(models.Model):
-    """Варианты ответа бота на запросы"""
+    """Команды для бота и описание"""
     title = models.CharField('Заголовок команды', max_length=100)
-    text = models.TextField('Текс команды')
+    description = models.TextField('Описание команды')
 
     class Meta:
         ordering = ('id',)
@@ -12,16 +12,17 @@ class SimpleText(models.Model):
         verbose_name_plural = 'Команды для бота'
         constraints = [
             models.UniqueConstraint(
-                fields=['title', 'text'],
+                fields=['title', 'description'],
                 name='uniq_answer'
             )
         ]
 
     def __str__(self):
-        return f'{self.title} - {self.text}'
+        return f'{self.title} - {self.description}'
 
 
 class BakingType(models.Model):
+    """Типы выпечки"""
     type = models.CharField(
         'Тип выпечки',
         max_length=100,
@@ -38,8 +39,9 @@ class BakingType(models.Model):
 
 
 class Baking(models.Model):
+    """Описание и рецепт выпечки"""
     title = models.CharField('Название выпечки', max_length=100)
-    description = models.TextField('Описание выпечки')
+    description = models.TextField('Описание и рецепт выпечки')
     image = models.ImageField(
         'Изображение выпечки',
         upload_to='baking_bot/images'

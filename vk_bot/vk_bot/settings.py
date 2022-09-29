@@ -12,8 +12,10 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-6@e@%01irz&qq3%1ry
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = False
+# For local
+DEBUG = True
+# For Docker
+# DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -73,7 +75,8 @@ WSGI_APPLICATION = 'vk_bot.wsgi.application'
 
 # For local connect
 # DATABASES['default'] = dj_database_url.parse('postgres://postgres:docker@172.17.0.2:5432/test_base')
-# DATABASES['default'] = dj_database_url.parse('postgres://postgres:docker@localhost:49150/new_base')
+# DATABASES['default'] = dj_database_url.parse('postgres://postgres:postgres@localhost:5433/postgres')
+
 # For local connect
 DATABASES = {
     'default': dj_database_url.config(

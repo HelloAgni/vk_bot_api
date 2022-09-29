@@ -93,20 +93,6 @@ class Server:
                     peer_id=event.message.get('peer_id'),
                     message='Бот запущен, все в порядке'
                 )
-            # if event.type == VkBotEventType.WALL_POST_NEW:
-            #     self.send_message(
-            #         # session_api=self.session_api,
-            #         peer_id=obj.from_id,
-            #         message='Привет - Я бот, проверка связи!!!')
-            #     user_city = self.vk_session.method(
-            #         'users.get', {'user_ids': obj.get(
-            #             "from_id"), 'fields': 'city'})[0].get('city').get('title')
-            #     self.send_message(
-            #         peer_id=obj.from_id,
-            #         message=(
-            #             f'Привет - {user_name} город: {user_city}. Я Бот!\n'
-            #             f'Доступные команды: {bot_commands()}')
-            #     )
             elif event.type == Server.NEW_MSG and (json.loads(
                     event.message.get(
                         'payload')).get('button_baking') == 'Выпечки'):

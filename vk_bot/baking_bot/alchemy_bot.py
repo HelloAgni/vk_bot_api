@@ -37,10 +37,12 @@ def baking_type():
 
 def baking_products_title(text):
     type_id = db_session.execute(
-            'SELECT id FROM baking_bot_bakingtype where type=:type_name', {'type_name': text}
+            'SELECT id FROM baking_bot_bakingtype where type=:type_name',
+            {'type_name': text}
         ).fetchone()
     products = db_session.execute(
-            'SELECT title FROM baking_bot_baking where type_id=:id', {'id': type_id[0]}
+            'SELECT title FROM baking_bot_baking where type_id=:id',
+            {'id': type_id[0]}
         ).fetchall()
     return products
 
