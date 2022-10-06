@@ -5,13 +5,13 @@ from alchemy_bot import baking_type, baking_products_title
 def simple_keys_start():
     menu = VkKeyboard()
     menu.add_button(
-        'Бот!', payload={'bot_button': 'Бот!'})
+        'Команды', payload={'bot_button': 'Бот!'})
     menu.add_line()
     menu.add_button(
-        'Выпечки', color='primary', payload={'button_baking': 'Выпечки'})
+        'Десерты', color='primary', payload={'button_baking': 'Десерты'})
     menu.add_line()
     menu.add_button(
-        "New button", color="primary", payload={'new': 'New button'})
+        "Время работы Бота", color="primary", payload={'time_bot': 'Time_bot'})
     menu = menu.get_keyboard()
     return menu
 

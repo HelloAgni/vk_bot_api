@@ -12,8 +12,13 @@ db_session = scoped_session(sessionmaker(bind=engine))
 
 def bot_commands():
     query_rows = db_session.execute(
-        "SELECT * FROM baking_bot_simpletext").fetchall()
-    return ', '.join([_.title for _ in query_rows])
+        "SELECT title, description FROM baking_bot_simpletext"
+    ).fetchall()
+    return '\n'.join(
+        [' '.join([title, " -> ", desc]) for title, desc in query_rows]
+    )
+    # '/Бот! => Запуск Бота и обновление клавиатуры'
+    # '/Стоп! => Полная системная остановка Бота'
 
 
 def photo_bot():
@@ -59,4 +64,5 @@ def full_info(prod):
 # print(baking_products_title(text='b'))
 # print(baking_type())
 # print(photo_bot())
-print(full_info(prod='title4'))
+# print(full_info(prod='title4'))
+# print(bot_commands())

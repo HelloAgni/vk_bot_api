@@ -1,6 +1,8 @@
 import os
 import json
 import vk_api
+import datetime
+from exceptions import BotStop
 from dotenv import load_dotenv
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.upload import VkUpload
@@ -34,7 +36,7 @@ class Server:
             payload=payload
         )
 
-    def send_photo(self, peer_id):
+    def send_photo(self, peer_id, title=None):
         upload = VkUpload(self.vk_session)
         photo = upload.photo_messages(photo_bot())
         owner_id = photo[0]['owner_id']
@@ -45,7 +47,7 @@ class Server:
             peer_id=peer_id,
             attachment=attachment,
             random_id=get_random_id(),
-            message='Лови картинку')
+            message=f'{title}')
 
     def get_user_name(self, user_id):
         return self.vk.users.get(
@@ -64,78 +66,87 @@ class Server:
         #         "from_id"), 'fields': 'city'})[0].get('city').get('title')
 
     def start(self):
+        start_time = datetime.datetime.now()
         for event in self.long_poll.listen():
             print('Main_event ->', event)
-            if (event.type == Server.NEW_MSG and event.obj.message.get(
-                    'text') == '/стоп!'):
-                self.send_message(
-                    peer_id=event.obj.message.get('peer_id'),
-                    message=f'Бот Вас покидает, выполнена команда - STOP'
-                )
-                return print('Бот остановлен!')
-            elif (event.type == Server.NEW_MSG and event.obj.message.get(
-                    'text') == '/Бот!'):
-                message = event.obj.message
-                user_id = message.get('from_id')
+            if event.type == Server.NEW_MSG:
+                # event.obj.message == event.message => True
+                message = event.obj.message  # == event.message
+                from_id = message.get('from_id')
                 peer_id = message.get('peer_id')
-                self.send_message(
-                    peer_id=peer_id,
-                    message=(
-                        f'Привет - Я Бот\n'
-                        f'Ваше имя {self.get_user_name(user_id=user_id)}, '
-                        f'Вы из города {self.get_user_city(user_id=user_id)}\n'
-                        f'Доступные команды: {bot_commands()}'),
-                    keyboard=simple_keys_start(),
-                )
-            elif event.type == Server.NEW_MSG and (json.loads(event.message.get(
-                        'payload')).get('bot_button') == 'Бот!'):
-                self.send_message(
-                    peer_id=event.message.get('peer_id'),
-                    message='Бот запущен, все в порядке'
-                )
-            elif event.type == Server.NEW_MSG and (json.loads(
-                    event.message.get(
-                        'payload')).get('button_baking') == 'Выпечки'):
-                self.send_message(
-                    peer_id=event.message.get('peer_id'),
-                    message='Выбирайте тип выпечки',
-                    keyboard=baking_buttons(),
-                )
-            elif event.type == Server.NEW_MSG and (json.loads(
-                    event.message.get(
-                        'payload')).get('type')) in baking_type_list():
-                text = json.loads(
-                    event.message.get(
-                        'payload')).get('type')
-                self.send_message(
-                    peer_id=event.message.get('peer_id'),
-                    message=f'Выбран тип: {text}',
-                    keyboard=baking_buttons_prod(text),
-                )
-            elif event.type == Server.NEW_MSG and json.loads(
-                    event.message.get(
-                        'payload')).get('title_button'):
-                prod = json.loads(
-                    event.message.get(
-                        'payload')).get('title_button')
-                items = full_info(prod=prod)
-                self.send_message(
-                    peer_id=event.message.get('peer_id'),
-                    message=f'Вы дошли до описания продукта...\n'
-                            f'Название: {items.get("title")}\n'
-                            f'Описание: {items.get("desc")}'
-                    # keyboard=baking_buttons_prod(text),
-                    # payload=[],
-                )
-                self.send_photo(peer_id=event.obj.message.get("peer_id"))
-            elif (event.type == Server.NEW_MSG and event.obj.message.get(
-                    'text') == '/картинку!'):
-                self.send_photo(
-                    peer_id=event.obj.message.get("peer_id"))
+                if message.get('text') == '/Бот!':
+                    self.send_message(
+                        peer_id=peer_id,
+                        message=(
+                            f'Привет - Я Бот\n'
+                            f'Ваше имя {self.get_user_name(user_id=from_id)}, '
+                            f'Вы из города {self.get_user_city(user_id=from_id)}\n'
+                            f'Доступные команды:\n'
+                            f'{bot_commands()}'),
+                        keyboard=simple_keys_start(),
+                    )
+                elif message.get('text') == '/Стоп!':
+                    self.send_message(
+                        peer_id=event.message.get('peer_id'),
+                        message='Бот Вас покидает, выполнена команда - STOP!'
+                    )
+                    raise BotStop('System Stop!')
+                elif message.get('payload'):
+                    payload = event.message.get('payload')
+                    if json.loads(payload).get('bot_button') == 'Бот!':
+                        self.send_message(
+                            peer_id=peer_id,
+                            message=(
+                                    f'Бот запущен, все в порядке\n'
+                                    f'Доступные команды:\n'
+                                    f'{bot_commands()}'),
+                            keyboard=simple_keys_start()
+                        )
+                    if json.loads(payload).get('button_baking') == 'Десерты':
+                        self.send_message(
+                            peer_id=peer_id,
+                            message='Выберите десерт',
+                            keyboard=baking_buttons(),
+                        )
+                    if json.loads(payload).get('type') in baking_type_list():
+                        text = json.loads(payload).get('type')
+                        self.send_message(
+                            peer_id=peer_id,
+                            message=f'Выбран тип: {text}',
+                            keyboard=baking_buttons_prod(text),
+                        )
+                    if json.loads(payload).get('title_button'):
+                        prod = json.loads(payload).get('title_button')
+                        items = full_info(prod=prod)
+                        title = items.get('title')
+                        self.send_photo(
+                            peer_id=peer_id, title=title)
+                        self.send_message(
+                            peer_id=peer_id,
+                            message=f'Описание: {items.get("desc")}'
+                        )
+                    if json.loads(payload).get('time_bot') == 'Time_bot':
+                        current_time = datetime.datetime.now() - start_time
+                        h, m, s = str(current_time).split(':')
+                        self.send_message(
+                            peer_id=peer_id,
+                            message=(
+                                f'Время работы с момента активации -> \n'
+                                f'{h}д. {m}м. {str(s).split(".")[0]}c.'),
+                            keyboard=simple_keys_start(),
+                        )
+                else:
+                    print('Else type IN ->', event.type)
             else:
-                print('Else type ->', event.type)
+                print('Else type OUT ->', event.type)
 
 
 if __name__ == '__main__':
     server = Server(token=TOKEN, group_id=GROUP_ID)
-    server.start()
+    while True:
+        try:
+            server.start()
+        except BotStop:
+            break
+        except Exception as e:
+            print(f'Some error, do we need to fix it? -> {e}')

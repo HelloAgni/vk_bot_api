@@ -22,42 +22,42 @@ class SimpleText(models.Model):
 
 
 class BakingType(models.Model):
-    """Типы выпечки"""
+    """Типы десерта"""
     type = models.CharField(
-        'Тип выпечки',
+        'Тип десерта',
         max_length=100,
         unique=True
     )
 
     class Meta:
         ordering = ('type',)
-        verbose_name = 'Тип выпечки'
-        verbose_name_plural = 'Типы выпечки'
+        verbose_name = 'Тип десерта'
+        verbose_name_plural = 'Типы десертов'
 
     def __str__(self):
         return self.type
 
 
 class Baking(models.Model):
-    """Описание и рецепт выпечки"""
-    title = models.CharField('Название выпечки', max_length=100)
-    description = models.TextField('Описание и рецепт выпечки')
+    """Описание десерта"""
+    title = models.CharField('Название десерта', max_length=100)
+    description = models.TextField('Описание и рецепт десерта')
     image = models.ImageField(
-        'Изображение выпечки',
+        'Изображение десерта',
         upload_to='baking_bot/images'
     )
     type = models.ForeignKey(
         BakingType,
         on_delete=models.SET_NULL,
         null=True,
-        verbose_name='Тип выпечки',
+        verbose_name='Тип десерта',
         related_name='baking'
     )
 
     class Meta:
         ordering = ('title',)
-        verbose_name = 'Выпечка'
-        verbose_name_plural = 'Выпечки'
+        verbose_name = 'Десерт'
+        verbose_name_plural = 'Десерты'
         constraints = [
             models.UniqueConstraint(
                 fields=['title', 'description'],
