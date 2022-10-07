@@ -21,7 +21,7 @@ GROUP_ID = os.getenv('GROUP_ID')
 
 class Server:
     """Бот для сообществ"""
-    NEW_MSG = VkBotEventType.MESSAGE_NEW  # chat message
+    NEW_MSG = VkBotEventType.MESSAGE_NEW
 
     def __init__(self, token, group_id):
         self.vk_session = vk_api.VkApi(token=token)

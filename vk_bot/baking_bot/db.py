@@ -35,7 +35,6 @@ def baking_type():
     rows = db_session.execute(
         'SELECT * FROM baking_bot_bakingtype').fetchall()
     return [dict(x) for x in rows]
-    # [{'id': 1, 'type': 'a'}, {'id': 2, 'type': 'b'}]
 
 
 def baking_products_title(text):
@@ -56,4 +55,3 @@ def full_info(prod):
             {'title': prod}).fetchall()
     columns = ['title', 'desc', 'img']
     return dict(zip(columns, product[0]))
-    # {'title': 'title4', 'desc': 'aaaa', 'img': 'baking_bot/images/011_zFpA2YT.png'}

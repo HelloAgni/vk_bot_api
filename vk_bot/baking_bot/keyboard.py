@@ -1,7 +1,7 @@
 from vk_api.keyboard import VkKeyboard
 
-from db import baking_type, baking_products_title
 from config import *
+from db import baking_type, baking_products_title
 
 
 def simple_keys_start():
@@ -29,18 +29,12 @@ def baking_buttons():
 
 def baking_type_list():
     return [x.get('type') for x in baking_type()]
-    # ['a', 'b', 'c', 'd', 'e']
 
 
 def baking_buttons_prod(text):
     array = baking_products_title(text)
-    # [('asdasd',), ('bbb',)]
     menu = VkKeyboard(inline=True)
-    for button in [','.join(x) for x in array]:  # ['asdasd', 'bbb']
+    for button in [','.join(x) for x in array]:
         menu.add_button(button, payload={'title_button': button})
     menu = menu.get_keyboard()
     return menu
-
-
-# print(baking_buttons_prod(text='b'))
-# print(baking_type_list())
