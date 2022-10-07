@@ -2,10 +2,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 # For Docker
-# conn_url = 'postgresql+psycopg2://postgres:postgres@host.docker.internal:5433/postgres'
-
+conn_url = 'postgresql+psycopg2://postgres:postgres@host.docker.internal:5433/postgres'
 # For local
-conn_url = 'postgresql+psycopg2://postgres:postgres@localhost:5433/postgres'
+# conn_url = 'postgresql+psycopg2://postgres:postgres@localhost:5433/postgres'
+
 engine = create_engine(conn_url, echo=True)
 db_session = scoped_session(sessionmaker(bind=engine))
 
@@ -17,27 +17,23 @@ def bot_commands():
     return '\n'.join(
         [' '.join([title, " -> ", desc]) for title, desc in query_rows]
     )
-    # '/Бот! => Запуск Бота и обновление клавиатуры'
-    # '/Стоп! => Полная системная остановка Бота'
 
 
 def photo_bot():
     # For Docker
-    # query_rows = db_session.execute(
-    #     "SELECT * FROM baking_bot_baking").fetchone()
-    # return '/app/media' + query_rows.image
+    query_rows = db_session.execute(
+        "SELECT * FROM baking_bot_baking").fetchone()
+    return '/app/media' + query_rows.image
     # For local
-    absolute_path = 'E:\\PyCharm_projects\\vk_bot_api\\vk_bot\\media\\'
-    return absolute_path + 'baking_bot\\images\\4.jpg'
+    # absolute_path = 'E:\\PyCharm_projects\\vk_bot_api\\vk_bot\\media\\'
+    # return absolute_path + 'baking_bot\\images\\4.jpg'
 
 
 def baking_type():
     rows = db_session.execute(
         'SELECT * FROM baking_bot_bakingtype').fetchall()
-    # return [''.join(x) for x in rows]
     return [dict(x) for x in rows]
     # [{'id': 1, 'type': 'a'}, {'id': 2, 'type': 'b'}]
-    # return [x.get('type') for x in [dict(x) for x in rows]]
 
 
 def baking_products_title(text):

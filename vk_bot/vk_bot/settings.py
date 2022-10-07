@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
 
-import dj_database_url
+# for local
+# import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,9 +14,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-6@e@%01irz&qq3%1ry
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # For local
-DEBUG = True
+# DEBUG = True
 # For Docker
-# DEBUG = False
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -63,25 +64,25 @@ TEMPLATES = [
 WSGI_APPLICATION = 'vk_bot.wsgi.application'
 
 # For Docker
-# DATABASES = {
-#     'default': {
-#         'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
-#         'NAME': os.getenv('DB_NAME', default='postgres'),
-#         'USER': os.getenv('POSTGRES_USER', default='postgres'),
-#         'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
-#         'HOST': os.getenv('DB_HOST', default='db'),
-#         'PORT': os.getenv('DB_PORT', default='5432')
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': os.getenv('DB_NAME', default='postgres'),
+        'USER': os.getenv('POSTGRES_USER', default='postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
+        'HOST': os.getenv('DB_HOST', default='db'),
+        'PORT': os.getenv('DB_PORT', default='5432')
+    }
+}
 
-# For local connect
+# For local connect v1
 # DATABASES['default'] = dj_database_url.parse('postgres://postgres:docker@172.17.0.2:5432/test_base')
 # DATABASES['default'] = dj_database_url.parse('postgres://postgres:postgres@localhost:5433/postgres')
 
-# For local connect
-DATABASES = {
-    'default': dj_database_url.config(
-        default='postgres://postgres:postgres@localhost:5433/postgres')}
+# For local connect v2
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default='postgres://postgres:postgres@localhost:5433/postgres')}
 
 
 AUTH_PASSWORD_VALIDATORS = [

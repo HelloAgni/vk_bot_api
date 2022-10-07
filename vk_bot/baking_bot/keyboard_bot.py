@@ -1,17 +1,19 @@
 from vk_api.keyboard import VkKeyboard
-from alchemy_bot import baking_type, baking_products_title
+
+from db_bot import baking_type, baking_products_title
+from msg_commands import *
 
 
 def simple_keys_start():
     menu = VkKeyboard()
     menu.add_button(
-        'Команды', payload={'bot_button': 'Бот!'})
+        'Команды', payload={'bot_button': PL_BOT})
     menu.add_line()
     menu.add_button(
-        'Десерты', color='primary', payload={'button_baking': 'Десерты'})
+        'Десерты', color='primary', payload={'button_baking': PL_DESSERT})
     menu.add_line()
     menu.add_button(
-        "Время работы Бота", color="primary", payload={'time_bot': 'Time_bot'})
+        'Длительность работы Бота', color='primary', payload={'time_bot': PL_TIME})
     menu = menu.get_keyboard()
     return menu
 
