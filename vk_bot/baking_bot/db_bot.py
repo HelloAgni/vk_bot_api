@@ -19,14 +19,16 @@ def bot_commands():
     )
 
 
-def photo_bot():
-    # For Docker
+# For Docker
+def photo_bot(prod_title):
     query_rows = db_session.execute(
-        "SELECT * FROM baking_bot_baking").fetchone()
-    return '/app/media' + query_rows.image
-    # For local
-    # absolute_path = 'E:\\PyCharm_projects\\vk_bot_api\\vk_bot\\media\\'
-    # return absolute_path + 'baking_bot\\images\\4.jpg'
+        "SELECT image FROM baking_bot_baking where title=:title",
+        {'title': prod_title}).fetchone()
+    return '/app/media/' + query_rows.image
+# For local test
+# def photo_bot()
+#     absolute_path = 'E:\\PyCharm_projects\\vk_bot_api\\vk_bot\\media\\'
+#     return absolute_path + 'baking_bot\\images\\4.jpg'
 
 
 def baking_type():

@@ -40,7 +40,8 @@ class Server:
 
     def send_photo(self, peer_id, title=None):
         upload = VkUpload(self.vk_session)
-        photo = upload.photo_messages(photo_bot())
+        photo = upload.photo_messages(photo_bot(prod_title=title))  # Docker
+        # photo = upload.photo_messages(photo_bot())  # Local
         owner_id = photo[0]['owner_id']
         photo_id = photo[0]['id']
         access_key = photo[0]['access_key']
