@@ -3,7 +3,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 # For Docker
 conn_url = 'postgresql+psycopg2://postgres:postgres@host.docker.internal:5433/postgres'
-# For local
+# For local dev
 # conn_url = 'postgresql+psycopg2://postgres:postgres@localhost:5433/postgres'
 
 engine = create_engine(conn_url, echo=True)
@@ -25,7 +25,7 @@ def photo_bot(prod_title):
         "SELECT image FROM baking_bot_baking where title=:title",
         {'title': prod_title}).fetchone()
     return '/app/media/' + query_rows.image
-# For local test
+# For local dev
 # def photo_bot()
 #     absolute_path = 'E:\\PyCharm_projects\\vk_bot_api\\vk_bot\\media\\'
 #     return absolute_path + 'baking_bot\\images\\4.jpg'
@@ -57,10 +57,3 @@ def full_info(prod):
     columns = ['title', 'desc', 'img']
     return dict(zip(columns, product[0]))
     # {'title': 'title4', 'desc': 'aaaa', 'img': 'baking_bot/images/011_zFpA2YT.png'}
-
-
-# print(baking_products_title(text='b'))
-# print(baking_type())
-# print(photo_bot())
-# print(full_info(prod='title4'))
-# print(bot_commands())

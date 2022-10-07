@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-# for local
+# For local dev
 # import dj_database_url
 from dotenv import load_dotenv
 
@@ -11,10 +11,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-6@e@%01irz&qq3%1rygkvk@z7cm4nc43e2r_c+6f#%xf-_+u+8')
 
-
-# SECURITY WARNING: don't run with debug turned on in production!
-# For local
+# For local dev
 # DEBUG = True
+
 # For Docker
 DEBUG = False
 
@@ -75,11 +74,11 @@ DATABASES = {
     }
 }
 
-# For local connect v1
+# For local dev connect v1
 # DATABASES['default'] = dj_database_url.parse('postgres://postgres:docker@172.17.0.2:5432/test_base')
 # DATABASES['default'] = dj_database_url.parse('postgres://postgres:postgres@localhost:5433/postgres')
 
-# For local connect v2
+# For local dev connect v2
 # DATABASES = {
 #     'default': dj_database_url.config(
 #         default='postgres://postgres:postgres@localhost:5433/postgres')}

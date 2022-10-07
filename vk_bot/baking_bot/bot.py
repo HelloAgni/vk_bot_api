@@ -8,10 +8,10 @@ from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.upload import VkUpload
 from vk_api.utils import get_random_id
 
-from db_bot import bot_commands, photo_bot, full_info
+from db import bot_commands, photo_bot, full_info
 from exceptions import BotStop
-from keyboard_bot import *
-from msg_commands import *
+from keyboard import *
+from config import *
 
 load_dotenv()
 
@@ -71,9 +71,9 @@ class Server:
         #         "from_id"), 'fields': 'city'})[0].get('city').get('title')
 
     def start(self):
+        print('Бот активирован')
         start_time = datetime.datetime.now()
         for event in self.long_poll.listen():
-            print('Main_event ->', event)
             if event.type == Server.NEW_MSG:
                 # event.obj.message == event.message => True
                 message = event.obj.message
@@ -140,10 +140,6 @@ class Server:
                                 f'{h}д. {m}м. {str(s).split(".")[0]}c.'),
                             keyboard=simple_keys_start(),
                         )
-                else:
-                    print('Else type IN ->', event.type)
-            else:
-                print('Else type OUT ->', event.type)
 
 
 if __name__ == '__main__':

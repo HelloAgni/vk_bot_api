@@ -1,7 +1,7 @@
 from vk_api.keyboard import VkKeyboard
 
-from db_bot import baking_type, baking_products_title
-from msg_commands import *
+from db import baking_type, baking_products_title
+from config import *
 
 
 def simple_keys_start():
