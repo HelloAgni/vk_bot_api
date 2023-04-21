@@ -1,8 +1,4 @@
 # VK Bot Long Poll API
-
----
-**Проект для изучения VK Bot Long Poll API.**  
-
 ***VK Бот для сообществ поддерживает следующий функционал:***  
 - Отправка в личный/общий чат сообщений и фото из БД Postgresql,  
 - Реакция на команды,  
@@ -113,14 +109,3 @@ db.py
 # For local dev
 conn_url = 'postgresql+psycopg2://postgres:postgres@localhost:5433/postgres'
 ```
-
-В планах добавить в проект Бота помощника в путешествиях:
-> Город, достопримечательности  
-> Погода  
-> Расстояния  
-
-*В проекте изучаются следующие технологии:*  
-> VK Bot Long Poll API  
-> SQLAlchemy  
-> dj_database_url  
-> pgAdmin 4  
